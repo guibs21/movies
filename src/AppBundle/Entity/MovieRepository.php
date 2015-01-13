@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
+
+
 /**
  * MovieRepository
  *
@@ -12,4 +14,33 @@ use Doctrine\ORM\EntityRepository;
  */
 class MovieRepository extends EntityRepository
 {
+    
+    public function countAll() {
+        $query = $this->createQueryBuilder("m")
+                ->select("count(m)")
+                ->getQuery();
+        
+        $count = $query->getSingleScalarResult();
+        return $count;
+    }
+    public function minYear() {
+       $query = $this->createQueryBuilder('m')
+                ->select("MIN(m.year)")
+                ->getQuery();
+        
+        // singlescalar pour obtenir directement le nombre(sans array autour)
+        $min = $query->getSingleScalarResult();
+        return $min; 
+    }
+    
+    public function maxYear() {
+       $query = $this->createQueryBuilder('m')
+                ->select("MAX(m.year)")
+                ->getQuery();
+        
+        // singlescalar pour obtenir directement le nombre(sans array autour)
+        $max = $query->getSingleScalarResult();
+        return $max; 
+    }
+     
 }

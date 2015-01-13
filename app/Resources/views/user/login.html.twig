@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
+<div class="container">
     {% if error %}
         <div>{{ error.message }}</div>
     {% endif %}
@@ -21,4 +21,5 @@
 
         <button type="submit">login</button>
     </form>
+</div>
 {% endblock %}

@@ -1,5 +1,57 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    Homepage.
+    <div class="container">
+        {# Affiche toute les vidéos de la table #}
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <form id="filterSlider">
+                    Filter by date interval: <br>
+                    <b>{{ moviesMinNumber }}</b>
+                    <input id="ex2" type="text"  data-slider-min="{{ moviesMinNumber }}" data-slider-max="{{ moviesMaxNumber }}" data-slider-step="1" data-slider-value="[1900,2100]"/>
+                    <b>{{ moviesMaxNumber }}</b><br>
+                    <input type="submit" class="btn btn-default"></input>
+                    <input type="hidden" name="min" id="min">
+                    <input type="hidden" name="max" id="max">
+                </form>
+            </div>
+        {% for movie in movies %}
+            <div class="col-lg-2 col-sm-3 col-xs-12">
+                <a href="{{ path('videoDetails', {'id':movie.id}) }}" class="thumbnail">
+                    <img src="{{ movie.poster }}" class="img-responsive">
+                </a>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    {# n'affiche le lien que s'il y  a rellement une page precedente ... #}
+    {% if currentPage > 1 %}
+    <div class="container">
+        <a class="btn btn-default" href="{{ path('homepage', {'page' : currentPage-1 }) }}" title="">Films precedents</a>
+    {% endif %}
+    {% if currentPage < maxPages %}
+        <a class="btn btn-default"  href="{{ path('homepage', {'page' : currentPage+1 }) }}" title="">Films suivants</a>
+    {% endif %}
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <p>Nombre de films : {{ moviesNumber }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <p>Affichage des films : {{ (currentPage-1)*numPerPage+1 }} à 
+                {% if numPerPage*currentPage > moviesNumber %}
+                    {{ moviesNumber }}
+                {% else %}
+                    {{ numPerPage*currentPage }}
+                {% endif %}
+                sur {{ moviesNumber }} films.
+                </p>
+            </div>
+        </div>
+    </div>
 {% endblock %}

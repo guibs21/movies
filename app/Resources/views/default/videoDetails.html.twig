@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-3 ">
+                <img src="{{ movie.poster }}" class="img-responsive">
+            </div>
+            <div class="col-xs-12 col-sm-8">
+                <h1>{{ movie.title }} ({{ movie.year }})</h1>
+                <h4>{{ movie.countries }}</h4>
+                <button class="btn btn-warning">
+                    <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+                    Ratings : {{ movie.rating }}
+                </button></br></br>
+                <p>Votes : <cite class="text-muted">{{ movie.votes }}</cite></p>
+                <p>Date de sortie : <cite class="text-muted">{{ movie.released|date("d-m-Y") }}</cite></p>
+                <p>Genres : <cite class="text-muted">{{ movie.genres }}</cite></p>
+                <p>Realisateur : <cite class="text-muted">{{ movie.directors }}</cite></p>
+                <p>Scénariste : <cite class="text-muted">{{ movie.writers }}</cite></p>
+                <p>Acteurs : <cite class="text-muted">{{ movie.actors }}</cite></p>
+                <h3>Synopsis</h3>
+                <p>{{ movie.plot }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block title %}
+   {{ movie.title }} | {{ parent() }}
+{% endblock %}
