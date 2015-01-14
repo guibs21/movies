@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -34,6 +35,7 @@ class DefaultController extends Controller
      */
     public function showAllMoviesAction(Request $request, $page)
     {
+        
         $numPerPage = 50; // nombre de films à afficher par page
         $offset = ($page - 1) * $numPerPage; // nombre de films à sauter lors de l'affichage
         
@@ -49,8 +51,10 @@ class DefaultController extends Controller
         $maxPages = ceil($moviesNumber/$numPerPage);
         
         // renvoie les valeurs min et max du slider filtre année
-        $minYear = $request->query->get('min');
-        $maxYear = $request->query->get('max');
+        $minYear = $request->query->get('min') ? $request->query->get('min') : 1900;
+        $maxYear = $request->query->get('max') ? $request->query->get('max') : date('Y');
+        
+        $movies = $movieRepository->filtre($minYear, $maxYear, $offset);
         
         // si l'uilisateur a deconner avec l'url ..
         // on redirige vers la derniere page
@@ -72,10 +76,10 @@ class DefaultController extends Controller
         // deuxieme argument => classe ORDER BY
         // troisieme =>parametre LIMIT (50 filmd par page max)
         // quatrieme => offset, 
-        $movies = $movieRepository->findBy(array(), array(
-                            "year" => "DESC",
-                            "title" => "ASC"
-            ), $numPerPage , $offset);
+//        $movies = $movieRepository->findBy(array(), array(
+//                            "year" => "DESC",
+//                            "title" => "ASC"
+//            ), $numPerPage , $offset);
         
         // prépare l'envoi à la vue
         $params = array(

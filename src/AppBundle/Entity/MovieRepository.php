@@ -45,5 +45,19 @@ class MovieRepository extends EntityRepository
         $maxY = $query->getSingleScalarResult();
         return $maxY; 
     }
+    
+    public function filtre($minYear, $maxYear,$offset) {
+        $qb = $this->createQueryBuilder("m")
+                ->select("m")
+                ->andWhere('m.year BETWEEN :min AND  :max')
+                ->setParameter('min',$minYear)
+                ->setParameter('max',$maxYear)
+                ->setMaxResults(50)
+                ->setFirstResult($offset);
+        $result = $qb->getQuery()
+                ->getResult();
+
+        return $result;
+    }
      
 }
