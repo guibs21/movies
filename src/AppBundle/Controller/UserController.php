@@ -7,8 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use AppBundle\Entity\User;
 use AppBundle\Form\RegistrationType;
-use Symfony\Component\HttpFoundation\Request;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 
 class UserController extends Controller
@@ -115,5 +115,26 @@ class UserController extends Controller
             
         );
         return $this->render('user/register.html.twig', $params);
+    }
+    
+    /**
+     * @Route("/test-email", name="testEmail")
+     */
+    public function testAction() {
+       
+        $username = "yo";
+        
+        $message = \Swift_Message::newInstance()
+            ->setCharset("utf-8")
+            ->setSubject('Movies-mail')
+            ->setFrom(array('mikael.guy@live.fr' => "Mikael"))
+            ->setTo('guibioul@live.fr')
+            ->setBody($this->renderView('email/forgot_password_email.html.twig',
+                            array('username' => $username)),"txt/html")
+        ;
+        $this->get('mailer')->send($message);
+        
+        return $this->render("user/lost-password-check-email.html.twig");
+
     }
 }
