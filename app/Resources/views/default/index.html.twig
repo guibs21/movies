@@ -5,7 +5,7 @@
         {# Affiche toute les vidéos de la table #}
         <div class="row">
             <div class="col-sm-12 text-center">
-                <form id="filterSlider">
+                <form id="filterSlider" action="{{ path('homepage') }}" method="GET">
                     Filter by date interval: <br>
                     <b>{{ moviesMinNumber }}</b>
                     <input id="ex2" type="text"  data-slider-min="{{ moviesMinNumber }}" data-slider-max="{{ moviesMaxNumber }}" data-slider-step="1" data-slider-value="[1900,2100]"/>
@@ -27,23 +27,16 @@
     {# n'affiche le lien que s'il y  a rellement une page precedente ... #}
     {% if currentPage > 1 %}
     <div class="container">
-        <a class="btn btn-default" href="{{ path('homepage', {'page' : currentPage-1 }) }}" title="">Films precedents</a>
+        <a class="btn btn-default" href="{{ path('homepage', {'page' : currentPage-1, 'minYear' : minYear, 'maxYear' : maxYear}) }}" title="">Films precedents</a>
     {% endif %}
     {% if currentPage < maxPages %}
-        <a class="btn btn-default"  href="{{ path('homepage', {'page' : currentPage+1 }) }}" title="">Films suivants</a>
+        <a class="btn btn-default"  href="{{ path('homepage', {'page' : currentPage+1, 'minYear' : minYear, 'maxYear' : maxYear }) }}" title="">Films suivants</a>
     {% endif %}
     </div>
     <div class="container">
         <div class="row">
             <div class="col-sm-12 text-center">
-                <p>Nombre de films : {{ moviesNumber }}</p>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12 text-center">
-                <p>Affichage des films : {{ (currentPage-1)*numPerPage+1 }} à 
+                <p>Affichage des films : {{ (currentPage-1)* numPerPage+1 }} à 
                 {% if numPerPage*currentPage > moviesNumber %}
                     {{ moviesNumber }}
                 {% else %}
@@ -51,6 +44,13 @@
                 {% endif %}
                 sur {{ moviesNumber }} films.
                 </p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <p>Nombre de films : {{ moviesNumber }}</p>
             </div>
         </div>
     </div>

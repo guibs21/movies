@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class MovieRepository extends EntityRepository
 {
-    
+    // compteur 
     public function countAll() {
         $query = $this->createQueryBuilder("m")
                 ->select("count(m)")
@@ -23,24 +23,27 @@ class MovieRepository extends EntityRepository
         $count = $query->getSingleScalarResult();
         return $count;
     }
+    
+    // année mini film bdd
     public function minYear() {
        $query = $this->createQueryBuilder('m')
                 ->select("MIN(m.year)")
                 ->getQuery();
         
         // singlescalar pour obtenir directement le nombre(sans array autour)
-        $min = $query->getSingleScalarResult();
-        return $min; 
+        $minY = $query->getSingleScalarResult();
+        return $minY; 
     }
     
+    // année maxi film bdd
     public function maxYear() {
        $query = $this->createQueryBuilder('m')
                 ->select("MAX(m.year)")
                 ->getQuery();
         
         // singlescalar pour obtenir directement le nombre(sans array autour)
-        $max = $query->getSingleScalarResult();
-        return $max; 
+        $maxY = $query->getSingleScalarResult();
+        return $maxY; 
     }
      
 }

@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
@@ -14,7 +15,7 @@ class DefaultController extends Controller
      */
     public function videoDetailsAction($id)
     {
-        // pour faire un select, on utilise le repository
+        //récupère le film depuis la bdd, en fonction de son id (présent dans l'URL)
         $videoRepository = $this->getDoctrine()->getRepository("AppBundle:Movie");
         
         // recupere le films par rapport à l'id
@@ -23,7 +24,7 @@ class DefaultController extends Controller
         $params = array(
             "movie" => $movie
         );
-        
+        // envoie la vue, en lui passant les variables
         return $this->render('default/videoDetails.html.twig', $params);
         
     }
@@ -31,24 +32,25 @@ class DefaultController extends Controller
     /**
      * @Route("/{page}", name="homepage", requirements={"page"="\d+"}, defaults={"page" = "1"})
      */
-    public function showAllMoviesAction($page)
+    public function showAllMoviesAction(Request $request, $page)
     {
-        // pour faire un select, on utilise le repository
-        $movieRepository = $this->getDoctrine()->getRepository("AppBundle:Movie");
-        
         $numPerPage = 50; // nombre de films à afficher par page
         $offset = ($page - 1) * $numPerPage; // nombre de films à sauter lors de l'affichage
         
-        
+        // pour faire un select, on utilise le repository récupère les films depuis la bdd
+        $movieRepository = $this->getDoctrine()->getRepository("AppBundle:Movie");
         
         // recup dans la bdd les années min et max
         $moviesMinNumber = $movieRepository->minYear();
         $moviesMaxNumber = $movieRepository->maxYear();
         
-        
         $moviesNumber = $movieRepository->countAll();
         
         $maxPages = ceil($moviesNumber/$numPerPage);
+        
+        // renvoie les valeurs min et max du slider filtre année
+        $minYear = $request->query->get('min');
+        $maxYear = $request->query->get('max');
         
         // si l'uilisateur a deconner avec l'url ..
         // on redirige vers la derniere page
@@ -75,10 +77,7 @@ class DefaultController extends Controller
                             "title" => "ASC"
             ), $numPerPage , $offset);
         
-        
-        // creer un tableau associatif des valeurs à passer à Twig
-        // les clefs seront les noms des variables Twig
-        // les valeurs seront les valeurs des variables Twig
+        // prépare l'envoi à la vue
         $params = array(
             "movies" => $movies,
             "moviesNumber" => $moviesNumber,
@@ -86,12 +85,12 @@ class DefaultController extends Controller
             "moviesMaxNumber" => $moviesMaxNumber,
             "maxPages" => $maxPages,
             "numPerPage" => $numPerPage,
+            "minYear" => $minYear,
+            "maxYear" => $maxYear,
             "currentPage" => $page
         );
-        
+        // envoie la vue, en lui passant les variables
         return $this->render('default/index.html.twig', $params);
     }
-    
-    
     
 }
